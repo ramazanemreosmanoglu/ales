@@ -1,3 +1,3 @@
 # ALES
 
-Working application for ALES Exam.
+Training application of ALES.
