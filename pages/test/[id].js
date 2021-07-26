@@ -1,7 +1,3 @@
-/*
-TODO: Make a request to API to check that there is a test with this ID.
-*/
-
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import HeadSection from "../../components/HeadSection";
@@ -15,49 +11,25 @@ import {
     Button,
     Modal,
 } from "react-bootstrap";
+import axios from 'axios';
 
 const EMPTY_VALUE = "x";
 
 
-const example_data = {
-    "title": "Test 1",
-    "hardness": 1,
+const empty_data = {
+    "title": "Yukleniyor...",
     "questions": [
         {
             no: 1,
-            description: "Asagidakilerden hangisi 2+2'dir?",
+            description: "...",
             options: [
-                ["a", "4"],
-                ["b", "5"],
-                ["c", "6"],
-                ["d", "7"],
-                ["e", "8"],
+                ["a", "..."],
+                ["b", "..."],
+                ["c", "..."],
+                ["d", "..."],
+                ["e", "..."],
             ],
             true_answer: "a",
-        },
-        {
-            no: 2,
-            description: "Asagidakilerden hangisi 2+4'tur?",
-            options: [
-                ["a", "2"],
-                ["b", "3"],
-                ["c", "4"],
-                ["d", "5"],
-                ["e", "6"],
-            ],
-            true_answer: "e",
-        },
-        {
-            no: 3,
-            description: "42+6?",
-            options: [
-                ["a", "56"],
-                ["b", "48"],
-                ["c", "31"],
-                ["d", "45"],
-                ["e", "78"],
-            ],
-            true_answer: "b",
         },
     ]
 }
@@ -115,7 +87,18 @@ export default function Test () {
     const {id} = router.query;
     // TODO: API requests
 
-    const data = example_data;
+    const [notFound, setNotFound] = useState(false);
+    const [data, setData] = useState(empty_data);
+
+    axios.get("http://127.0.0.1:8000/get_test/?id="+id)
+        .then((response) => {
+            setData(response.data);
+        })
+        .catch((error) => {
+            setNotFound(true)
+        })
+
+
     const [count, setCount] = useState(1);
     const [answers, setAnswers] = useState(fillArray(EMPTY_VALUE, data.questions.length));
     const [finished, setFinished] = useState(false);
@@ -132,6 +115,17 @@ export default function Test () {
 
     const right_answers = collect_right_answers(data.questions);
     const results = compare_answers(answers, right_answers); // Compare answers and get results as an array.
+
+    if(notFound) {
+        return (<>
+                    <HeadSection title={"Test Bulunamadi - Ales"}/>
+                    <NavbarAles/>
+                    <Container>
+                        <h1>Test Bulunamadi.</h1>
+                    </Container>
+            </>
+        )
+    }
 
     return (<>
         <HeadSection title={data.title + " - Ales Test"}/>
