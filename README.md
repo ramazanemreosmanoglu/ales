@@ -4,14 +4,14 @@
 
 Firstly, install required npm packages:
 
-```
+```bash
 cd ales/
 npm install
 ```
 
 Then set Django api server up:
 
-```
+```bash
 cd ales_backend/
 python manage.py runserver
 ```
@@ -20,7 +20,7 @@ This project isn't using virtual environments, so make sure that Django and Pyth
 
 Now, let's start NextJS server:
 
-```
+```bash
 cd .. # Go to root directory of project
 npm run dev
 ```
